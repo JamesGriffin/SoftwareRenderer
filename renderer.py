@@ -32,7 +32,16 @@ class Renderer:
 
     # Render FPS counter
     def render_fps(self):
-        text_surface = self.font.render(("%d FPS" % (1 / self.get_delta())), True, (0, 0, 0))
+        # Create text surfaces
+        text_surface_outline = self.font.render(("%d FPS" % (1 / self.get_delta())), True, (64, 64, 64))
+        text_surface = self.font.render(("%d FPS" % (1 / self.get_delta())), True, (255, 255, 255))
+
+        # Blit text multiple times to create outline
+        self.surface.blit(text_surface_outline, (7, 8))
+        self.surface.blit(text_surface_outline, (9, 8))
+        self.surface.blit(text_surface_outline, (8, 7))
+        self.surface.blit(text_surface_outline, (8, 9))
+
         self.surface.blit(text_surface, (8, 8))
 
     # Update display
