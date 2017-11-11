@@ -30,8 +30,12 @@ class Renderer:
     def clear(self, colour=(128, 128, 128)):
         self.surface.fill(colour)
 
-    # Render FPS counter
-    def render_fps(self):
+    # Draw a single pixel at x,y with specified colour
+    def draw_pixel(self, x, y, colour):
+        self.surface.set_at((x, y), colour)
+
+    # Draw FPS counter
+    def draw_fps_counter(self):
         # Create text surfaces
         text_surface_outline = self.font.render(("%d FPS" % (1 / self.get_delta())), True, (64, 64, 64))
         text_surface = self.font.render(("%d FPS" % (1 / self.get_delta())), True, (255, 255, 255))
