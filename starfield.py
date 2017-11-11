@@ -1,5 +1,6 @@
 import random
 
+# X, Y, Z index constants for convenience
 X = 0
 Y = 1
 Z = 2
@@ -34,6 +35,7 @@ class StarField:
         half_width = renderer.width/2
         half_height = renderer.height/2
 
+        # For each star, update position and then draw to screen
         for i in xrange(self.stars.__len__()):
             self.stars[i][Z] -= renderer.get_delta() * self.speed
 
