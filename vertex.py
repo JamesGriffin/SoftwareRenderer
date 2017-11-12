@@ -6,7 +6,7 @@ class Vertex(object):
     Represents a vertex with a 2D array
     """
     def __init__(self, x=0, y=0, z=0, w=1):
-        self.pos = [x, y, z, w]
+        self.pos = np.array([x, y, z, w])
 
     def set_pos(self, pos):
         self.pos = pos
@@ -28,9 +28,11 @@ class Vertex(object):
     def w(self):
         return self.pos[3]
 
+    # Transform vertex using matrix
     def transform(self, matrix):
         return Vertex().set_pos(matrix.transform(self.pos))
 
+    # Perspective divide vertex
     def perspective_divide(self):
         return Vertex().set_pos([self.x/self.w, self.y/self.w, self.z/self.w, self.w])
 

@@ -8,7 +8,7 @@ class Renderer(object):
     Software Renderer
     """
     def __init__(self, width, height, title):
-        # Basic parameters
+        # Basic window parameters
         self.width = width
         self.height = height
 
