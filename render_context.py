@@ -1,3 +1,4 @@
+import numpy as np
 from matrix4 import Matrix4
 
 
@@ -17,7 +18,7 @@ class RenderContext(object):
         self.scan_buffer[y_coord * 2 + 1] = x_max
 
     # Draw shape between y_min and y_max
-    def draw_shape(self, y_min, y_max, fill=True):
+    def draw_shape(self, y_min, y_max, fill=True, colour=(255, 255, 255)):
         for j in xrange(y_min, y_max):
             x_min = self.scan_buffer[j * 2]
             x_max = self.scan_buffer[j * 2 + 1]
@@ -29,14 +30,14 @@ class RenderContext(object):
             if fill:
                 # Fill shape
                 for i in xrange(x_min, x_max):
-                    self.renderer.draw_pixel(i, j, (1, 86, 183))
+                    self.renderer.draw_pixel(i, j, colour)
             else:
                 # Outline only
-                self.renderer.draw_pixel(x_min, j, (1, 86, 183))
-                self.renderer.draw_pixel(x_max, j, (1, 86, 183))
+                self.renderer.draw_pixel(x_min, j, colour)
+                self.renderer.draw_pixel(x_max, j, colour)
 
     # Draw triangle (v1, v2, v3)
-    def draw_triangle(self, v1, v2, v3, fill=True):
+    def draw_triangle(self, v1, v2, v3, fill=True, colour=(255, 255, 255)):
 
         # Initialise screen space transform matrix
         matrix = Matrix4().init_screen_space_transform(float(self.renderer.width)/2.0, float(self.renderer.height)/2.0)
@@ -45,6 +46,13 @@ class RenderContext(object):
         min_y_vert = v1.transform(matrix).perspective_divide()
         mid_y_vert = v2.transform(matrix).perspective_divide()
         max_y_vert = v3.transform(matrix).perspective_divide()
+
+        # Experimental shading
+
+        # normal = v1.triangle_normal(v2, v3)
+        # shading = abs(np.dot(normal, np.array([0.0, 0.0, 1.0])))
+        # shading = np.array([shading, 0.4]).max()
+        # colour = (255 * shading, 255 * shading, 255 * shading)
 
         # Swap vertices to reorder
         if min_y_vert.y > max_y_vert.y:
@@ -68,7 +76,7 @@ class RenderContext(object):
 
         # Write triangles to scan buffer and then draw triangles
         self.scan_convert_triangle(min_y_vert, mid_y_vert, max_y_vert, handedness)
-        self.draw_shape(int(min_y_vert.y), int(max_y_vert.y), fill=fill)
+        self.draw_shape(int(min_y_vert.y), int(max_y_vert.y), fill, colour)
 
     # Write triangle lines scan buffer
     def scan_convert_triangle(self, min_y_vert, mid_y_vert, max_y_vert, handedness):

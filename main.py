@@ -39,8 +39,8 @@ if __name__ == "__main__":
             # Handle user events
             renderer.process_events()
 
-            # Clear screen, fill with grey
-            renderer.clear((64, 64, 64))
+            # Clear screen and draw checkerboard
+            renderer.draw_checkerboard()
 
             # Calculate time delta and update triangle rotation
             delta = time.time() - previous_time
@@ -49,14 +49,15 @@ if __name__ == "__main__":
 
             # Initialise translation and rotation matrices
             translation = Matrix4().init_translation(0.0, 0.0, 2.5)
-            rotation = Matrix4().init_rotation(0.0, rot_counter, rot_counter/2.0)
+            rotation = Matrix4().init_rotation(0.0, rot_counter, rot_counter / 2.0)
 
             # Dot product matrices to form final transformation matrix
             transform = Matrix4()
             transform.m = np.dot(projection.m, np.dot(translation.m, rotation.m))
 
             # Draw transformed triangle
-            render_context.draw_triangle(v1.transform(transform), v2.transform(transform), v3.transform(transform))
+            render_context.draw_triangle(v1.transform(transform), v2.transform(transform), v3.transform(transform),
+                                         colour=(0, 210, 80))
 
             # Draw FPS counter and update screen
             renderer.draw_fps_counter()

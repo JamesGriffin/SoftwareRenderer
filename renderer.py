@@ -7,6 +7,7 @@ class Renderer(object):
     """
     Software Renderer
     """
+
     def __init__(self, width, height, title):
         # Basic window parameters
         self.width = width
@@ -31,6 +32,16 @@ class Renderer(object):
     def clear(self, colour=(128, 128, 128)):
         self.surface.fill(colour)
 
+    # Clear screen and draw checkerboard
+    def draw_checkerboard(self, c1=(45, 45, 45), c2=(40, 40, 40), square_size=32):
+        self.clear(c1)
+
+        for x in xrange(0, self.width, square_size):
+            for y in xrange(0, self.height, square_size):
+                if (x / square_size) % 2 == (y / square_size) % 2:
+                    pygame.draw.polygon(self.surface, c2, ((x, y), (x + square_size, y),
+                                                           (x + square_size, y + square_size), (x, y + square_size)), 0)
+
     # Draw a single pixel at x,y with specified colour
     def draw_pixel(self, x, y, colour):
         self.surface.set_at((x, y), colour)
@@ -52,7 +63,7 @@ class Renderer(object):
     # Update display
     def update(self):
         pygame.display.update()
-        self. last_update = time.time()
+        self.last_update = time.time()
 
     # Process pygame events
     def process_events(self):
