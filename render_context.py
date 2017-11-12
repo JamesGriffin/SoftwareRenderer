@@ -76,7 +76,7 @@ class RenderContext(object):
 
         # Write triangles to scan buffer and then draw triangles
         self.scan_convert_triangle(min_y_vert, mid_y_vert, max_y_vert, handedness)
-        self.draw_shape(int(min_y_vert.y), int(max_y_vert.y), fill, colour)
+        self.draw_shape(int(np.ceil(min_y_vert.y)), int(np.ceil(max_y_vert.y)), fill, colour)
 
     # Write triangle lines scan buffer
     def scan_convert_triangle(self, min_y_vert, mid_y_vert, max_y_vert, handedness):
@@ -87,20 +87,19 @@ class RenderContext(object):
     # Write lines to scan buffer
     def scan_convert_line(self, min_y_vert, max_y_vert, handedness):
 
-        y_start = int(min_y_vert.y)
-        y_end = int(max_y_vert.y)
-        x_start = int(min_y_vert.x)
-        x_end = int(max_y_vert.x)
+        y_start = int(np.ceil(min_y_vert.y))
+        y_end = int(np.ceil(max_y_vert.y))
 
-        y_dist = y_end - y_start
-        x_dist = x_end - x_start
+        y_dist = max_y_vert.y - min_y_vert.y
+        x_dist = max_y_vert.x - min_y_vert.x
 
         if y_dist <= 0:
             return
 
         x_step = float(x_dist)/float(y_dist)
-        cur_x = x_start
+        y_prestep = y_start - min_y_vert.y
+        cur_x = min_y_vert.x + y_prestep * x_step
 
         for j in xrange(y_start, y_end):
-            self.scan_buffer[j * 2 + handedness] = int(cur_x)
+            self.scan_buffer[j * 2 + handedness] = int(np.ceil(cur_x))
             cur_x += x_step

@@ -57,7 +57,7 @@ if __name__ == "__main__":
 
             # Draw transformed triangle
             render_context.draw_triangle(v1.transform(transform), v2.transform(transform), v3.transform(transform),
-                                         colour=(0, 210, 80))
+                                         fill=True, colour=(0, 210, 80))
 
             # Draw FPS counter and update screen
             renderer.draw_fps_counter()
