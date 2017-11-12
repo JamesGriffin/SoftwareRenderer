@@ -2,7 +2,8 @@ import sys
 import time
 import pygame
 
-class Renderer:
+
+class Renderer(object):
     """
     Software Renderer
     """

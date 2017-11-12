@@ -3,7 +3,7 @@ from starfield import StarField
 
 WIDTH = 800
 HEIGHT = 600
-WINDOW_TITLE = "Software Renderer"
+WINDOW_TITLE = "3D Starfield"
 MAX_FRAMERATE = 0
 
 if __name__ == "__main__":

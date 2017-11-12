@@ -6,7 +6,7 @@ Y = 1
 Z = 2
 
 
-class StarField:
+class StarField(object):
     """
     Renders a 3D starfield effect
     """
