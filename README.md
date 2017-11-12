@@ -2,7 +2,7 @@
 
 3D Software Renderer in Python (WIP).
 
-![Screenshot](http://screenclippr.com/lal6N/#.png)
+![Screenshot](http://screenclippr.com/pKLj4/#.png)
 
 ## Install Dependencies and Run
 

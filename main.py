@@ -5,8 +5,8 @@ from render_context import RenderContext
 from vertex import Vertex
 import time
 
-WIDTH = 800
-HEIGHT = 600
+WIDTH = 640
+HEIGHT = 480
 WINDOW_TITLE = "Software Renderer"
 MAX_FRAMERATE = 0
 
