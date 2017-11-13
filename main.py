@@ -48,7 +48,7 @@ if __name__ == "__main__":
 
             # Calculate time delta and update triangle rotation
             delta = time.time() - previous_time
-            rot_counter += 100 * delta
+            rot_counter += 50 * delta
             previous_time = time.time()
 
             # Initialise translation and rotation matrices
@@ -63,7 +63,7 @@ if __name__ == "__main__":
             # render_context.draw_triangle(v1.transform(transform), v2.transform(transform), v3.transform(transform),
             #                              fill=True, colour=(0, 210, 80))
 
-            render_context.draw_mesh(mesh, transform)
+            render_context.draw_mesh(mesh, transform, colour=(100, 200, 100))
 
             # Draw FPS counter and update screen
             renderer.draw_fps_counter()

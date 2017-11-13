@@ -49,18 +49,20 @@ class RenderContext(object):
         max_y_vert = v3.transform(matrix).perspective_divide()
 
         # Experimental shading
-
         normal = v1.triangle_normal(v2, v3)
 
+        # Backface culling
         if np.dot(normal, np.array([0.0, 0.0, 1.0])) >= 0:
             return
 
+        # Calculate shading
         shading = np.dot(normal, np.array([0.57735, 0.57735, -0.57735]))
 
-        shading = abs(shading)
+        if shading < 0:
+            shading = 0
 
         shading = np.array([shading, 0.2]).max()
-        c = (80 * shading, 200 * shading, 80 * shading)
+        c = (colour[0] * shading, colour[1] * shading, colour[2] * shading)
 
         # Swap vertices to reorder
         if min_y_vert.y > max_y_vert.y:
@@ -87,7 +89,7 @@ class RenderContext(object):
         self.draw_shape(int(np.ceil(min_y_vert.y)), int(np.ceil(max_y_vert.y)), fill, c)
 
     # Draw indexed mesh
-    def draw_mesh(self, indexed_mesh, transformation):
+    def draw_mesh(self, indexed_mesh, transformation, fill=True, colour=(255, 255, 255)):
         for tri in indexed_mesh.faces:
             v1, v2, v3 = map(lambda i: indexed_mesh.vertices[i-1], tri)
 
@@ -95,7 +97,7 @@ class RenderContext(object):
             v2 = Vertex(v2[0], v2[1], v2[2]).transform(transformation)
             v3 = Vertex(v3[0], v3[1], v3[2]).transform(transformation)
 
-            self.draw_triangle(v1, v2, v3)
+            self.draw_triangle(v1, v2, v3, fill=fill, colour=colour)
 
     # Write triangle lines scan buffer
     def scan_convert_triangle(self, min_y_vert, mid_y_vert, max_y_vert, handedness):
