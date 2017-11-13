@@ -1,5 +1,6 @@
 import numpy as np
 from matrix4 import Matrix4
+from vertex import Vertex
 
 
 class RenderContext(object):
@@ -49,10 +50,17 @@ class RenderContext(object):
 
         # Experimental shading
 
-        # normal = v1.triangle_normal(v2, v3)
-        # shading = abs(np.dot(normal, np.array([0.0, 0.0, 1.0])))
-        # shading = np.array([shading, 0.4]).max()
-        # colour = (255 * shading, 255 * shading, 255 * shading)
+        normal = v1.triangle_normal(v2, v3)
+
+        if np.dot(normal, np.array([0.0, 0.0, 1.0])) >= 0:
+            return
+
+        shading = np.dot(normal, np.array([0.57735, 0.57735, 0.57735]))
+
+        shading = abs(shading)
+
+        shading = np.array([shading, 0.2]).max()
+        c = (80 * shading, 200 * shading, 80 * shading)
 
         # Swap vertices to reorder
         if min_y_vert.y > max_y_vert.y:
@@ -76,7 +84,24 @@ class RenderContext(object):
 
         # Write triangles to scan buffer and then draw triangles
         self.scan_convert_triangle(min_y_vert, mid_y_vert, max_y_vert, handedness)
-        self.draw_shape(int(np.ceil(min_y_vert.y)), int(np.ceil(max_y_vert.y)), fill, colour)
+        self.draw_shape(int(np.ceil(min_y_vert.y)), int(np.ceil(max_y_vert.y)), fill, c)
+
+    # Draw indexed mesh
+    def draw_mesh(self, indexed_mesh):
+        for tri in indexed_mesh.faces:
+            v1, v2, v3 = map(lambda i: indexed_mesh.vertices[i-1], tri)
+
+            projection = Matrix4().init_perspective(45, float(self.renderer.width) / float(self.renderer.height), 0.1, 1000.0)
+            translation = Matrix4().init_translation(0.0, 0.0, 5.0)
+
+            transformation = Matrix4()
+            transformation.m = np.dot(projection.m, translation.m)
+
+            v1 = Vertex(v1[0], v1[1], v1[2]).transform(transformation)
+            v2 = Vertex(v2[0], v2[1], v2[2]).transform(transformation)
+            v3 = Vertex(v3[0], v3[1], v3[2]).transform(transformation)
+
+            self.draw_triangle(v1, v2, v3)
 
     # Write triangle lines scan buffer
     def scan_convert_triangle(self, min_y_vert, mid_y_vert, max_y_vert, handedness):

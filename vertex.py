@@ -49,10 +49,10 @@ class Vertex(object):
     # Calculate triangle normal
     def triangle_normal(self, v2, v3):
 
-        s1 = self.pos - v2.pos
-        s2 = self.pos - v3.pos
+        s1 = v2.pos - self.pos
+        s2 = v3.pos - self.pos
 
         s1 = np.array([s1[0], s1[1], s1[2]])
         s2 = np.array([s2[0], s2[1], s2[2]])
 
-        return np.cross(s1, s2) / np.absolute(np.cross(s1, s2)).max()
+        return np.cross(s1, s2) / np.linalg.norm(np.cross(s1, s2))

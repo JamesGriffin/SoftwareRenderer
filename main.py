@@ -1,12 +1,14 @@
+import time
 import numpy as np
 from matrix4 import Matrix4
 from renderer import Renderer
 from render_context import RenderContext
 from vertex import Vertex
-import time
+from indexed_mesh import IndexedMesh
 
-WIDTH = 640
-HEIGHT = 480
+
+WIDTH = 1024
+HEIGHT = 768
 WINDOW_TITLE = "Software Renderer"
 MAX_FRAMERATE = 0
 
@@ -23,8 +25,10 @@ if __name__ == "__main__":
     v2 = Vertex(0.0, 1.0, 0.0)
     v3 = Vertex(1.0, -1.0, 0.0)
 
+    mesh = IndexedMesh("obj/monkey.obj")
+
     # Initialise perspective projection matrix
-    projection = Matrix4().init_perspective(90, float(WIDTH) / float(HEIGHT), 0.1, 1000.0)
+    projection = Matrix4().init_perspective(30, float(WIDTH) / float(HEIGHT), 0.1, 1000.0)
 
     # Stores triangle rotation amount
     rot_counter = 0.0
@@ -48,7 +52,7 @@ if __name__ == "__main__":
             previous_time = time.time()
 
             # Initialise translation and rotation matrices
-            translation = Matrix4().init_translation(0.0, 0.0, 2.5)
+            translation = Matrix4().init_translation(0.0, 0.0, 5.0)
             rotation = Matrix4().init_rotation(0.0, rot_counter, rot_counter / 2.0)
 
             # Dot product matrices to form final transformation matrix
@@ -56,8 +60,10 @@ if __name__ == "__main__":
             transform.m = np.dot(projection.m, np.dot(translation.m, rotation.m))
 
             # Draw transformed triangle
-            render_context.draw_triangle(v1.transform(transform), v2.transform(transform), v3.transform(transform),
-                                         fill=True, colour=(0, 210, 80))
+            # render_context.draw_triangle(v1.transform(transform), v2.transform(transform), v3.transform(transform),
+            #                              fill=True, colour=(0, 210, 80))
+
+            render_context.draw_mesh(mesh)
 
             # Draw FPS counter and update screen
             renderer.draw_fps_counter()
