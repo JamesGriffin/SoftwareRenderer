@@ -7,8 +7,8 @@ from vertex import Vertex
 from indexed_mesh import IndexedMesh
 
 
-WIDTH = 800
-HEIGHT = 600
+WIDTH = 640
+HEIGHT = 480
 WINDOW_TITLE = "Software Renderer"
 MAX_FRAMERATE = 0
 
@@ -63,7 +63,7 @@ if __name__ == "__main__":
             # render_context.draw_triangle(v1.transform(transform), v2.transform(transform), v3.transform(transform),
             #                              fill=True, colour=(0, 210, 80))
 
-            render_context.draw_mesh(mesh, transform, colour=(100, 200, 100))
+            render_context.draw_mesh(mesh, transform, colour=(50, 200, 60))
 
             # Draw FPS counter and update screen
             renderer.draw_fps_counter()

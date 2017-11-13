@@ -52,11 +52,12 @@ class RenderContext(object):
         normal = v1.triangle_normal(v2, v3)
 
         # Backface culling
-        if np.dot(normal, np.array([0.0, 0.0, 1.0])) >= 0:
+        if min_y_vert.triangle_area(max_y_vert, mid_y_vert) <= 0:
             return
 
         # Calculate shading
-        shading = np.dot(normal, np.array([0.57735, 0.57735, -0.57735]))
+        shading = np.dot(normal, np.array([0.57735, 0.57735, 0.57735]))
+        # shading = np.dot(normal, np.array([0.0, 0.0, 1.0]))
 
         if shading < 0:
             shading = 0
