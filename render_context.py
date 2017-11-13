@@ -55,7 +55,7 @@ class RenderContext(object):
         if np.dot(normal, np.array([0.0, 0.0, 1.0])) >= 0:
             return
 
-        shading = np.dot(normal, np.array([0.57735, 0.57735, 0.57735]))
+        shading = np.dot(normal, np.array([0.57735, 0.57735, -0.57735]))
 
         shading = abs(shading)
 
@@ -87,15 +87,9 @@ class RenderContext(object):
         self.draw_shape(int(np.ceil(min_y_vert.y)), int(np.ceil(max_y_vert.y)), fill, c)
 
     # Draw indexed mesh
-    def draw_mesh(self, indexed_mesh):
+    def draw_mesh(self, indexed_mesh, transformation):
         for tri in indexed_mesh.faces:
             v1, v2, v3 = map(lambda i: indexed_mesh.vertices[i-1], tri)
-
-            projection = Matrix4().init_perspective(45, float(self.renderer.width) / float(self.renderer.height), 0.1, 1000.0)
-            translation = Matrix4().init_translation(0.0, 0.0, 5.0)
-
-            transformation = Matrix4()
-            transformation.m = np.dot(projection.m, translation.m)
 
             v1 = Vertex(v1[0], v1[1], v1[2]).transform(transformation)
             v2 = Vertex(v2[0], v2[1], v2[2]).transform(transformation)

@@ -7,8 +7,8 @@ from vertex import Vertex
 from indexed_mesh import IndexedMesh
 
 
-WIDTH = 1024
-HEIGHT = 768
+WIDTH = 800
+HEIGHT = 600
 WINDOW_TITLE = "Software Renderer"
 MAX_FRAMERATE = 0
 
@@ -25,10 +25,10 @@ if __name__ == "__main__":
     v2 = Vertex(0.0, 1.0, 0.0)
     v3 = Vertex(1.0, -1.0, 0.0)
 
-    mesh = IndexedMesh("obj/monkey.obj")
+    mesh = IndexedMesh("obj/ico.obj")
 
     # Initialise perspective projection matrix
-    projection = Matrix4().init_perspective(30, float(WIDTH) / float(HEIGHT), 0.1, 1000.0)
+    projection = Matrix4().init_perspective(45.0, float(WIDTH) / float(HEIGHT), 0.1, 1000.0)
 
     # Stores triangle rotation amount
     rot_counter = 0.0
@@ -52,7 +52,7 @@ if __name__ == "__main__":
             previous_time = time.time()
 
             # Initialise translation and rotation matrices
-            translation = Matrix4().init_translation(0.0, 0.0, 5.0)
+            translation = Matrix4().init_translation(0.0, 0.0, 2.5)
             rotation = Matrix4().init_rotation(0.0, rot_counter, rot_counter / 2.0)
 
             # Dot product matrices to form final transformation matrix
@@ -63,7 +63,7 @@ if __name__ == "__main__":
             # render_context.draw_triangle(v1.transform(transform), v2.transform(transform), v3.transform(transform),
             #                              fill=True, colour=(0, 210, 80))
 
-            render_context.draw_mesh(mesh)
+            render_context.draw_mesh(mesh, transform)
 
             # Draw FPS counter and update screen
             renderer.draw_fps_counter()
