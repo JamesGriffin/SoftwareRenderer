@@ -25,7 +25,7 @@ if __name__ == "__main__":
     v2 = Vertex(0.0, 1.0, 0.0)
     v3 = Vertex(1.0, -1.0, 0.0)
 
-    mesh = IndexedMesh("obj/ico.obj")
+    mesh = IndexedMesh("../obj/ico.obj")
 
     # Initialise perspective projection matrix
     projection = Matrix4().init_perspective(45.0, float(WIDTH) / float(HEIGHT), 0.1, 1000.0)
