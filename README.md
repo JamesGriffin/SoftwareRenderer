@@ -17,5 +17,8 @@ A number of examples are included:
 $ python icosphere_example.py
 ```
 ```
+$ python triangle_example.py
+```
+```
 $ python starfield_example.py
 ```

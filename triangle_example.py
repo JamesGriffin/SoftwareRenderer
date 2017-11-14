@@ -8,7 +8,7 @@ from software_renderer.indexed_mesh import IndexedMesh
 
 WIDTH = 640
 HEIGHT = 480
-WINDOW_TITLE = "Icosphere"
+WINDOW_TITLE = "3D Triangle"
 MAX_FRAMERATE = 0
 
 if __name__ == "__main__":
@@ -18,18 +18,17 @@ if __name__ == "__main__":
 
     # Create render context
     render_context = RenderContext(renderer)
+    render_context.draw_backfaces = True
 
     # Triangle
     v1 = Vertex(-1.0, -1.0, 0.0)
     v2 = Vertex(0.0, 1.0, 0.0)
     v3 = Vertex(1.0, -1.0, 0.0)
 
-    mesh = IndexedMesh("obj/ico.obj")
-
     # Initialise perspective projection matrix
     projection = Matrix4().init_perspective(45.0, float(WIDTH) / float(HEIGHT), 0.1, 1000.0)
 
-    # Stores mesh rotation amount
+    # Stores triangle rotation amount
     rot_counter = 0.0
 
     # Stores time of last update
@@ -47,19 +46,20 @@ if __name__ == "__main__":
 
             # Calculate time delta and update triangle rotation
             delta = time.time() - previous_time
-            rot_counter += 50 * delta
+            rot_counter += 100 * delta
             previous_time = time.time()
 
             # Initialise translation and rotation matrices
-            translation = Matrix4().init_translation(0.0, 0.0, 2.5)
+            translation = Matrix4().init_translation(0.0, 0.0, 4.0)
             rotation = Matrix4().init_rotation(0.0, rot_counter, rot_counter / 2.0)
 
             # Dot product matrices to form final transformation matrix
             transform = Matrix4()
             transform.m = np.dot(projection.m, np.dot(translation.m, rotation.m))
 
-            # Draw transformed mesh
-            render_context.draw_mesh(mesh, transform, colour=(50, 200, 60))
+            # Draw transformed triangle
+            render_context.draw_triangle(v1.transform(transform), v2.transform(transform), v3.transform(transform),
+                                         colour=(50, 200, 60), fill=False, shaded=False,)
 
             # Draw FPS counter and update screen
             renderer.draw_fps_counter()

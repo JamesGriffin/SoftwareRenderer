@@ -1,8 +1,8 @@
 from software_renderer.renderer import Renderer
 from software_renderer.starfield import StarField
 
-WIDTH = 800
-HEIGHT = 600
+WIDTH = 640
+HEIGHT = 480
 WINDOW_TITLE = "3D Starfield"
 MAX_FRAMERATE = 0
 
