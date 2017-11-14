@@ -19,11 +19,7 @@ if __name__ == "__main__":
     # Create render context
     render_context = RenderContext(renderer)
 
-    # Triangle
-    v1 = Vertex(-1.0, -1.0, 0.0)
-    v2 = Vertex(0.0, 1.0, 0.0)
-    v3 = Vertex(1.0, -1.0, 0.0)
-
+    # Load mesh
     mesh = IndexedMesh("obj/ico.obj")
 
     # Initialise perspective projection matrix
