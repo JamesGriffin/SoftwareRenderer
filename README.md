@@ -4,10 +4,18 @@
 
 ![Screenshot](http://screenclippr.com/YPusZ/#.png)
 
-## Install Dependencies and Run
+## Install Dependencies
 
 ```
 $ pip install -r requirements.txt
-$ python main.py
+```
+## Run
 
+A number of examples are included:
+
+```
+$ python icosphere_example.py
+```
+```
+$ python starfield_example.py
 ```
