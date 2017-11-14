@@ -1,5 +1,6 @@
-import numpy as np
 from matrix4 import Matrix4
+
+import numpy as np
 from vertex import Vertex
 
 

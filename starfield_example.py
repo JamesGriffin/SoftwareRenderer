@@ -1,5 +1,5 @@
-from renderer import Renderer
-from starfield import StarField
+from software_renderer.renderer import Renderer
+from software_renderer.starfield import StarField
 
 WIDTH = 800
 HEIGHT = 600
