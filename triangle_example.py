@@ -4,7 +4,6 @@ from software_renderer.matrix4 import Matrix4
 from software_renderer.renderer import Renderer
 from software_renderer.render_context import RenderContext
 from software_renderer.vertex import Vertex
-from software_renderer.indexed_mesh import IndexedMesh
 
 WIDTH = 640
 HEIGHT = 480
