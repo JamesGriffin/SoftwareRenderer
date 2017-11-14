@@ -41,7 +41,7 @@ class Matrix4(object):
 
     @classmethod
     def init_perspective(cls, fov, aspect_ratio, z_near, z_far):
-        """Initialise and return translation matrix"""
+        """Initialise and return perspective projection matrix"""
         tan_half_fov = float(np.tan(np.radians(fov) / 2))
         z_range = z_near - z_far
 
