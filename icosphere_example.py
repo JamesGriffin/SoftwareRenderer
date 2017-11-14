@@ -1,10 +1,6 @@
 import time
 import numpy as np
-from software_renderer.matrix4 import Matrix4
-from software_renderer.renderer import Renderer
-from software_renderer.render_context import RenderContext
-from software_renderer.vertex import Vertex
-from software_renderer.indexed_mesh import IndexedMesh
+from software_renderer import Renderer, RenderContext, IndexedMesh, Matrix4
 
 WIDTH = 640
 HEIGHT = 480
@@ -23,7 +19,7 @@ if __name__ == "__main__":
     mesh = IndexedMesh("obj/ico.obj")
 
     # Initialise perspective projection matrix
-    projection = Matrix4().init_perspective(45.0, float(WIDTH) / float(HEIGHT), 0.1, 1000.0)
+    projection = Matrix4.init_perspective(45.0, float(WIDTH) / float(HEIGHT), 0.1, 1000.0)
 
     # Stores mesh rotation amount
     rot_counter = 0.0
@@ -41,7 +37,7 @@ if __name__ == "__main__":
             # Clear screen and draw checkerboard
             renderer.draw_checkerboard()
 
-            # Calculate time delta and update triangle rotation
+            # Calculate time delta and update mesh rotation
             delta = time.time() - previous_time
             rot_counter += 50 * delta
             previous_time = time.time()

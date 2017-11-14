@@ -3,98 +3,67 @@ import numpy as np
 
 
 class Matrix4(object):
-    """
-    Represents a 4x4 matrix used for transformations.
-    """
+    """Represents a 4x4 matrix used for transformations."""
 
-    # Initialise with identity matrix
-    def __init__(self):
-        self.m = np.array([
-            [1.0, 0.0, 0.0, 0.0],
-            [0.0, 1.0, 0.0, 0.0],
-            [0.0, 0.0, 1.0, 0.0],
-            [0.0, 0.0, 0.0, 1.0]
-        ])
+    def __init__(self, array=None):
+        """Initialise with identity matrix or provided 2D array"""
+        if array is not None:
+            self.m = array
+        else:
+            self.m = np.identity(4)
 
-    # Transform vector r using matrix
     def transform(self, r):
-        return np.array([
-            self.m[0][0] * r[0] + self.m[0][1] * r[1] + self.m[0][2] * r[2] + self.m[0][3] * r[3],
-            self.m[1][0] * r[0] + self.m[1][1] * r[1] + self.m[1][2] * r[2] + self.m[1][3] * r[3],
-            self.m[2][0] * r[0] + self.m[2][1] * r[1] + self.m[2][2] * r[2] + self.m[2][3] * r[3],
-            self.m[3][0] * r[0] + self.m[3][1] * r[1] + self.m[3][2] * r[2] + self.m[3][3] * r[3]
-        ])
+        """Transform vector r using matrix"""
+        return np.dot(self.m, r)
 
-    # Initialise and return screen space transform matrix
-    def init_screen_space_transform(self, half_width, half_height):
-        self.m = np.array([
-            [half_width, 0.0, 0.0, half_width],
-            [0.0, -half_height, 0.0, half_height],
-            [0.0, 0.0, 1.0, 0.0],
-            [0.0, 0.0, 0.0, 1.0]
-        ])
+    @classmethod
+    def init_screen_space_transform(cls, half_width, half_height):
+        """Initialise and return screen space transform matrix"""
+        return cls(
+            np.array([
+                [half_width, 0.0,           0.0,        half_width],
+                [0.0,       -half_height,   0.0,        half_height],
+                [0.0,        0.0,           1.0,        0.0],
+                [0.0,        0.0,           0.0,        1.0]
+            ])
+        )
 
-        return self
+    @classmethod
+    def init_translation(cls, x, y, z):
+        """Initialise and return translation matrix"""
+        matrix = cls()
 
-    # Initialise and return translation matrix
-    def init_translation(self, x, y, z):
-        self.m[0][0] = 1.0
-        self.m[0][1] = 0.0
-        self.m[0][2] = 0.0
-        self.m[0][3] = x
+        matrix.m[0][3] = x
+        matrix.m[1][3] = y
+        matrix.m[2][3] = z
 
-        self.m[1][0] = 0.0
-        self.m[1][1] = 1.0
-        self.m[1][2] = 0.0
-        self.m[1][3] = y
+        return matrix
 
-        self.m[2][0] = 0.0
-        self.m[2][1] = 0.0
-        self.m[2][2] = 1.0
-        self.m[2][3] = z
-
-        self.m[3][0] = 0.0
-        self.m[3][1] = 0.0
-        self.m[3][2] = 0.0
-        self.m[3][3] = 1.0
-
-        return self
-
-    # Initialise and return perspective transformation matrix
-    def init_perspective(self, fov, aspect_ratio, z_near, z_far):
-        
+    @classmethod
+    def init_perspective(cls, fov, aspect_ratio, z_near, z_far):
+        """Initialise and return translation matrix"""
         tan_half_fov = float(np.tan(np.radians(fov) / 2))
         z_range = z_near - z_far
 
-        self.m[0][0] = 1.0 / (tan_half_fov * aspect_ratio)
-        self.m[0][1] = 0.0
-        self.m[0][2] = 0.0
-        self.m[0][3] = 0.0
-        self.m[1][0] = 0.0
-        self.m[1][1] = 1.0 / tan_half_fov
-        self.m[1][2] = 0.0
-        self.m[1][3] = 0.0
-        self.m[2][0] = 0.0
-        self.m[2][1] = 0.0
-        self.m[2][2] = (-z_near - z_far) / z_range
-        self.m[2][3] = 2 * z_far * z_near / z_range
-        self.m[3][0] = 0.0
-        self.m[3][1] = 0.0
-        self.m[3][2] = 1.0
-        self.m[3][3] = 0.0
+        return cls(
+            np.array([
+                [1.0 / (tan_half_fov * aspect_ratio), 0.0, 0.0, 0.0],
+                [0.0, 1.0 / tan_half_fov, 0.0, 0.0],
+                [0.0, 0.0, (-z_near - z_far) / z_range, 2 * z_far * z_near / z_range],
+                [0.0, 0.0, 1.0, 0.0]
+            ])
+        )
 
-        return self
-
-    # Initialise and return rotation matrix
-    def init_rotation(self, x, y, z):
-
+    @classmethod
+    def init_rotation(cls, x, y, z):
+        """Initialise and return rotation matrix"""
         x = math.radians(x)
         y = math.radians(y)
         z = math.radians(z)
 
-        rx = Matrix4()
-        ry = Matrix4()
-        rz = Matrix4()
+        rx = cls()
+        ry = cls()
+        rz = cls()
 
         rz.m[0][0] = float(math.cos(z))
         rz.m[0][1] = -float(math.sin(z))
@@ -147,6 +116,4 @@ class Matrix4(object):
         ry.m[3][2] = 0.0
         ry.m[3][3] = 1.0
 
-        self.m = np.dot(rz.m, np.dot(ry.m, rx.m))
-
-        return self
+        return cls(np.dot(rz.m, np.dot(ry.m, rx.m)))

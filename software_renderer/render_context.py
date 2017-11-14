@@ -5,24 +5,21 @@ from vertex import Vertex
 
 
 class RenderContext(object):
-    """
-    Render context is used for rendering polygons to a renderer instance
-    """
-
+    """Render context is used for rendering polygons to a renderer instance"""
     draw_backfaces = False
 
-    # Accepts renderer instance
     def __init__(self, renderer):
+        """Accepts renderer instance"""
         self.renderer = renderer
         self.scan_buffer = [0 for x in xrange(renderer.height * 2)]
 
-    # Draw x_min and x_max to scan buffer
     def draw_scan_buffer(self, y_coord, x_min, x_max):
+        """Draw x_min and x_max to scan buffer"""
         self.scan_buffer[y_coord * 2] = x_min
         self.scan_buffer[y_coord * 2 + 1] = x_max
 
-    # Draw shape between y_min and y_max
     def draw_shape(self, y_min, y_max, fill=True, colour=(255, 255, 255)):
+        """Draw shape between y_min and y_max"""
         for j in xrange(y_min, y_max):
             x_min = self.scan_buffer[j * 2]
             x_max = self.scan_buffer[j * 2 + 1]
@@ -40,11 +37,11 @@ class RenderContext(object):
                 self.renderer.draw_pixel(x_min, j, colour)
                 self.renderer.draw_pixel(x_max, j, colour)
 
-    # Draw triangle (v1, v2, v3)
     def draw_triangle(self, v1, v2, v3, colour=(255, 255, 255), fill=True, shaded=True):
+        """# Draw triangle formed by v1, v2, v3"""
 
         # Initialise screen space transform matrix
-        matrix = Matrix4().init_screen_space_transform(float(self.renderer.width)/2.0, float(self.renderer.height)/2.0)
+        matrix = Matrix4.init_screen_space_transform(float(self.renderer.width)/2.0, float(self.renderer.height)/2.0)
 
         # Apply screen space transform to vertices
         min_y_vert = v1.transform(matrix).perspective_divide()
@@ -96,8 +93,8 @@ class RenderContext(object):
         self.scan_convert_triangle(min_y_vert, mid_y_vert, max_y_vert, handedness)
         self.draw_shape(int(np.ceil(min_y_vert.y)), int(np.ceil(max_y_vert.y)), fill, c)
 
-    # Draw indexed mesh
     def draw_mesh(self, indexed_mesh, transformation, colour=(255, 255, 255), fill=True, shaded=True):
+        """Draw indexed mesh"""
         for tri in indexed_mesh.faces:
             v1, v2, v3 = map(lambda i: indexed_mesh.vertices[i-1], tri)
 
@@ -107,15 +104,14 @@ class RenderContext(object):
 
             self.draw_triangle(v1, v2, v3, fill=fill, colour=colour, shaded=shaded)
 
-    # Write triangle lines scan buffer
     def scan_convert_triangle(self, min_y_vert, mid_y_vert, max_y_vert, handedness):
+        """Write triangle lines scan buffer"""
         self.scan_convert_line(min_y_vert, max_y_vert, 0 + handedness)
         self.scan_convert_line(min_y_vert, mid_y_vert, 1 - handedness)
         self.scan_convert_line(mid_y_vert, max_y_vert, 1 - handedness)
 
-    # Write lines to scan buffer
     def scan_convert_line(self, min_y_vert, max_y_vert, handedness):
-
+        """Write lines to scan buffer"""
         y_start = int(np.ceil(min_y_vert.y))
         y_end = int(np.ceil(max_y_vert.y))
 

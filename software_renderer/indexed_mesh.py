@@ -1,7 +1,5 @@
 class IndexedMesh(object):
-    """
-    Indexed mesh
-    """
+    """Represents a mesh loaded from a provided obj"""
     def __init__(self, obj_filename):
         self.vertices = []
         self.normals = []
@@ -32,9 +30,3 @@ class IndexedMesh(object):
                         int(v3.split("/")[0])
                      ])
 
-if __name__ == "__main__":
-    m = IndexedMesh("obj/monkey_quad.obj")
-
-    print m.vertices
-    print m.normals
-    print m.faces

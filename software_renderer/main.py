@@ -23,7 +23,7 @@ if __name__ == "__main__":
     mesh = IndexedMesh("obj/ico.obj")
 
     # Initialise perspective projection matrix
-    projection = Matrix4().init_perspective(45.0, float(WIDTH) / float(HEIGHT), 0.1, 1000.0)
+    projection = Matrix4.init_perspective(45.0, float(WIDTH) / float(HEIGHT), 0.1, 1000.0)
 
     # Stores mesh rotation amount
     rot_counter = 0.0

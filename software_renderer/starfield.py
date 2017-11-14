@@ -7,9 +7,7 @@ Z = 2
 
 
 class StarField(object):
-    """
-    Renders a 3D starfield effect
-    """
+    """Renders a 3D starfield effect"""
     def __init__(self, num_stars, spread, speed):
         self.spread = spread
         self.speed = speed
@@ -19,16 +17,17 @@ class StarField(object):
         for i in xrange(num_stars):
             self.init_star(i)
 
-    # Initialise a star to a new random position
     def init_star(self, index):
+        """Initialise a star to a new random position"""
         self.stars[index] = [
             2 * (random.random() - 0.5) * self.spread,
             2 * (random.random() - 0.5) * self.spread,
             (random.random() + 0.00001) * self.spread
         ]
 
-    # Render
     def render(self, renderer):
+        """Render starfield"""
+
         # Clear screen to black
         renderer.clear((0, 0, 0))
 

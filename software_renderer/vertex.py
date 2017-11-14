@@ -2,9 +2,8 @@ import numpy as np
 
 
 class Vertex(object):
-    """
-    Represents a vertex with a 2D array
-    """
+    """Represents a vertex in 3D space"""
+
     def __init__(self, x=0, y=0, z=0, w=1):
         self.pos = np.array([x, y, z, w])
 
@@ -28,16 +27,16 @@ class Vertex(object):
     def w(self):
         return self.pos[3]
 
-    # Transform vertex using matrix
     def transform(self, matrix):
+        """Transform vertex using matrix"""
         return Vertex().set_pos(matrix.transform(self.pos))
 
-    # Perspective divide vertex
     def perspective_divide(self):
+        """Perspective divide vertex"""
         return Vertex().set_pos([self.x/self.w, self.y/self.w, self.z/self.w, self.w])
 
-    # Calculate triangle area
     def triangle_area(self, max_y_vert, mid_y_vert):
+        """Calculate triangle area"""
         x1 = max_y_vert.x - self.x
         y1 = max_y_vert.y - self.y
 
@@ -46,9 +45,8 @@ class Vertex(object):
 
         return (x1 * y2 - x2 * y1) / 2
 
-    # Calculate triangle normal
     def triangle_normal(self, v2, v3):
-
+        """Calculate normal of triangle formed by self.pos, v2, v3"""
         s1 = v2.pos - self.pos
         s2 = v3.pos - self.pos
 

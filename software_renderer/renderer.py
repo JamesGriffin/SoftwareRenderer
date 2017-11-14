@@ -60,7 +60,7 @@ class Renderer(object):
 
         self.surface.blit(text_surface, (8, 8))
 
-        # Update display
+    # Update display
     def update(self):
         pygame.display.update()
         self.last_update = time.time()

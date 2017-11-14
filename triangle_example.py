@@ -25,7 +25,7 @@ if __name__ == "__main__":
     v3 = Vertex(1.0, -1.0, 0.0)
 
     # Initialise perspective projection matrix
-    projection = Matrix4().init_perspective(45.0, float(WIDTH) / float(HEIGHT), 0.1, 1000.0)
+    projection = Matrix4.init_perspective(45.0, float(WIDTH) / float(HEIGHT), 0.1, 1000.0)
 
     # Stores triangle rotation amount
     rot_counter = 0.0
