@@ -53,4 +53,4 @@ class Vertex(object):
         s1 = np.array([s1[0], s1[1], s1[2]])
         s2 = np.array([s2[0], s2[1], s2[2]])
 
-        return np.cross(s1, s2) / np.linalg.norm(np.cross(s1, s2))
+        return np.cross(s2, s1) / np.linalg.norm(np.cross(s2, s1))
