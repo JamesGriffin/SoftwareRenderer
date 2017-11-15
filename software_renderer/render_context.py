@@ -1,7 +1,7 @@
-from matrix4 import Matrix4
-
 import numpy as np
 from vertex import Vertex
+from matrix4 import Matrix4
+from edge import Edge
 
 
 class RenderContext(object):
@@ -11,34 +11,9 @@ class RenderContext(object):
     def __init__(self, renderer):
         """Accepts renderer instance"""
         self.renderer = renderer
-        self.scan_buffer = [0 for x in xrange(renderer.height * 2)]
-
-    def draw_scan_buffer(self, y_coord, x_min, x_max):
-        """Draw x_min and x_max to scan buffer"""
-        self.scan_buffer[y_coord * 2] = x_min
-        self.scan_buffer[y_coord * 2 + 1] = x_max
-
-    def draw_shape(self, y_min, y_max, fill=True, colour=(255, 255, 255)):
-        """Draw shape between y_min and y_max"""
-        for j in xrange(y_min, y_max):
-            x_min = self.scan_buffer[j * 2]
-            x_max = self.scan_buffer[j * 2 + 1]
-
-            # Ensure x_min and x_max are correctly assigned
-            if x_min > x_max:
-                x_min, x_max = x_max, x_min
-
-            if fill:
-                # Fill shape
-                for i in xrange(x_min, x_max):
-                    self.renderer.draw_pixel(i, j, colour)
-            else:
-                # Outline only
-                self.renderer.draw_pixel(x_min, j, colour)
-                self.renderer.draw_pixel(x_max, j, colour)
 
     def draw_triangle(self, v1, v2, v3, colour=(255, 255, 255), fill=True, shaded=True):
-        """# Draw triangle formed by v1, v2, v3"""
+        """Draw triangle formed by v1, v2, v3"""
 
         # Initialise screen space transform matrix
         matrix = Matrix4.init_screen_space_transform(float(self.renderer.width)/2.0, float(self.renderer.height)/2.0)
@@ -86,11 +61,10 @@ class RenderContext(object):
 
         # Use triangle area to determine handedness
         area = min_y_vert.triangle_area(max_y_vert, min_y_vert)
-        handedness = 1 if area >= 0 else 0
+        handedness = area >= 0
 
         # Write triangles to scan buffer and then draw triangles
-        self.scan_convert_triangle(min_y_vert, mid_y_vert, max_y_vert, handedness)
-        self.draw_shape(int(np.ceil(min_y_vert.y)), int(np.ceil(max_y_vert.y)), fill, c)
+        self.scan_triangle(min_y_vert, mid_y_vert, max_y_vert, handedness, c, fill)
 
     def draw_mesh(self, indexed_mesh, transformation, colour=(255, 255, 255), fill=True, shaded=True):
         """Draw indexed mesh"""
@@ -103,27 +77,49 @@ class RenderContext(object):
 
             self.draw_triangle(v1, v2, v3, fill=fill, colour=colour, shaded=shaded)
 
-    def scan_convert_triangle(self, min_y_vert, mid_y_vert, max_y_vert, handedness):
-        """Write triangle lines scan buffer"""
-        self.scan_convert_line(min_y_vert, max_y_vert, 0 + handedness)
-        self.scan_convert_line(min_y_vert, mid_y_vert, 1 - handedness)
-        self.scan_convert_line(mid_y_vert, max_y_vert, 1 - handedness)
+    def scan_triangle(self, min_y_vert, mid_y_vert, max_y_vert, handedness, colour, fill):
+        """Draw triangle scan lines"""
 
-    def scan_convert_line(self, min_y_vert, max_y_vert, handedness):
-        """Write lines to scan buffer"""
-        y_start = int(np.ceil(min_y_vert.y))
-        y_end = int(np.ceil(max_y_vert.y))
+        top_to_bottom = Edge(min_y_vert, max_y_vert)
+        top_to_middle = Edge(min_y_vert, mid_y_vert)
+        middle_to_bottom = Edge(mid_y_vert, max_y_vert)
 
-        y_dist = max_y_vert.y - min_y_vert.y
-        x_dist = max_y_vert.x - min_y_vert.x
+        left = top_to_bottom
+        right = top_to_middle
 
-        if y_dist <= 0:
-            return
+        if handedness:
+            left, right = right, left
 
-        x_step = float(x_dist)/float(y_dist)
-        y_prestep = y_start - min_y_vert.y
-        cur_x = min_y_vert.x + y_prestep * x_step
+        y_start = top_to_middle.y_start
+        y_end = top_to_middle.y_end
 
         for j in xrange(y_start, y_end):
-            self.scan_buffer[j * 2 + handedness] = int(np.ceil(cur_x))
-            cur_x += x_step
+            self.draw_scan_line(left, right, j, colour)
+            left.step()
+            right.step()
+
+        left = top_to_bottom
+        right = middle_to_bottom
+
+        if handedness:
+            left, right = right, left
+
+        y_start = middle_to_bottom.y_start
+        y_end = middle_to_bottom.y_end
+
+        for j in xrange(y_start, y_end):
+            self.draw_scan_line(left, right, j, colour)
+            left.step()
+            right.step()
+
+    def draw_scan_line(self, left, right, j, colour):
+        x_min = int(np.ceil(left.x))
+        x_max = int(np.ceil(right.x))
+
+        # Ensure x_min and x_max are correctly assigned
+        if x_min > x_max:
+            x_min, x_max = x_max, x_min
+
+        # Draw line
+        for i in xrange(x_min, x_max):
+            self.renderer.draw_pixel(i, j, colour)

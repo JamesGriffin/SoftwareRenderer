@@ -49,12 +49,11 @@ if __name__ == "__main__":
             previous_time = time.time()
 
             # Initialise translation and rotation matrices
-            translation = Matrix4().init_translation(0.0, 0.0, 4.0)
-            rotation = Matrix4().init_rotation(0.0, rot_counter, rot_counter / 2.0)
+            translation = Matrix4.init_translation(0.0, 0.0, 4.0)
+            rotation = Matrix4.init_rotation(0.0, rot_counter, rot_counter / 2.0)
 
             # Dot product matrices to form final transformation matrix
-            transform = Matrix4()
-            transform.m = np.dot(projection.m, np.dot(translation.m, rotation.m))
+            transform = Matrix4(np.dot(projection.m, np.dot(translation.m, rotation.m)))
 
             # Draw transformed triangle
             render_context.draw_triangle(v1.transform(transform), v2.transform(transform), v3.transform(transform),
