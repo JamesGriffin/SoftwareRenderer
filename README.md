@@ -2,7 +2,7 @@
 
 3D Software Renderer in Python (WIP).
 
-![Screenshot](http://screenclippr.com/VXa86/#.png)
+![Monkey Example](http://screenclippr.com/UUwQn#.png)
 
 ## Install Dependencies
 
@@ -15,6 +15,9 @@ A number of examples are included:
 
 ```
 $ python icosphere_example.py
+```
+```
+$ python monkey_example.py
 ```
 ```
 $ python triangle_example.py
