@@ -1,6 +1,7 @@
 import sys
 import time
 import pygame
+import numpy as np
 
 
 class Renderer(object):
@@ -13,6 +14,8 @@ class Renderer(object):
         self.width = width
         self.height = height
 
+        # Pixel Framebuffer
+        self.framebuffer = np.zeros([width, height, 3])
         # Initialise PyGame Surface
         pygame.init()
         pygame.display.set_caption(title)
@@ -31,6 +34,7 @@ class Renderer(object):
     # Clear screen and fill with color (default is grey)
     def clear(self, colour=(128, 128, 128)):
         self.surface.fill(colour)
+        self.framebuffer = pygame.surfarray.array3d(self.surface)
 
     # Clear screen and draw checkerboard
     def draw_checkerboard(self, c1=(45, 45, 45), c2=(40, 40, 40), square_size=32):
@@ -42,9 +46,14 @@ class Renderer(object):
                     pygame.draw.polygon(self.surface, c2, ((x, y), (x + square_size, y),
                                                            (x + square_size, y + square_size), (x, y + square_size)), 0)
 
+        self.framebuffer = pygame.surfarray.array3d(self.surface)
+
+
+
     # Draw a single pixel at x,y with specified colour
     def draw_pixel(self, x, y, colour):
-        self.surface.set_at((x, y), colour)
+        if (0 <= x < self.width) and (0 <= y < self.height):
+            self.framebuffer[x][y] = colour
 
     # Draw FPS counter
     def draw_fps_counter(self):
@@ -62,6 +71,8 @@ class Renderer(object):
 
     # Update display
     def update(self):
+        pygame.surfarray.blit_array(self.surface, self.framebuffer)
+        self.draw_fps_counter()
         pygame.display.update()
         self.last_update = time.time()
 

@@ -6,7 +6,7 @@ from software_renderer import Renderer, RenderContext, IndexedMesh, Matrix4
 
 WIDTH = 640
 HEIGHT = 460
-WINDOW_TITLE = "Icosphere"
+WINDOW_TITLE = "Monkey"
 MAX_FRAMERATE = 0
 
 if __name__ == "__main__":
@@ -19,7 +19,7 @@ if __name__ == "__main__":
     render_context.draw_backfaces = False
 
     # Load mesh
-    mesh = IndexedMesh("obj/ico.obj")
+    mesh = IndexedMesh("obj/monkey.obj")
 
     # Initialise perspective projection matrix
     projection = Matrix4.init_perspective(60.0, float(WIDTH) / float(HEIGHT), 0.1, 1000.0)
@@ -86,14 +86,14 @@ if __name__ == "__main__":
             previous_time = time.time()
 
             # Initialise translation and rotation matrices
-            translation = Matrix4.init_translation(0.0, 0.0, 1.5 + zoom)
+            translation = Matrix4.init_translation(0.0, 0.0, 3.0 + zoom)
             rotation = Matrix4.init_rotation(rot_counter[1], -rot_counter[0], 0.0)
 
             # Dot product matrices to form final transformation matrix
             transform = Matrix4(np.dot(projection.m, np.dot(translation.m, rotation.m)))
 
             # Draw transformed mesh
-            render_context.draw_mesh(mesh, transform, fill=True, shaded=True, colour=(40, 200, 60))
+            render_context.draw_mesh(mesh, transform, fill=False, shaded=True, colour=(255, 255, 255))
 
             # Update screen
             renderer.update()

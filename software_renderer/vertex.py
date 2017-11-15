@@ -33,7 +33,9 @@ class Vertex(object):
 
     def perspective_divide(self):
         """Perspective divide vertex"""
-        return Vertex().set_pos([self.x/self.w, self.y/self.w, self.z/self.w, self.w])
+
+        w_inv = 1.0 / float(self.w)
+        return Vertex(self.x * w_inv, self.y * w_inv, self.z * w_inv, self.w)
 
     def triangle_area(self, max_y_vert, mid_y_vert):
         """Calculate triangle area"""
@@ -50,7 +52,10 @@ class Vertex(object):
         s1 = v2.pos - self.pos
         s2 = v3.pos - self.pos
 
-        s1 = np.array([s1[0], s1[1], s1[2]])
-        s2 = np.array([s2[0], s2[1], s2[2]])
+        normal = np.array([
+            (s2[1] * s1[2]) - (s2[2] * s1[1]),
+            (s2[2] * s1[0]) - (s2[0] * s1[2]),
+            (s2[0] * s1[1]) - (s2[1] * s1[0])
+        ])
 
-        return np.cross(s2, s1) / np.linalg.norm(np.cross(s2, s1))
+        return normal / np.linalg.norm(normal)
