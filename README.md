@@ -2,7 +2,7 @@
 
 3D Software Renderer in Python (WIP).
 
-![Monkey Example](http://screenclippr.com/UUwQn#.png)
+![Monkey Example](http://octobox.me/UUwQn#.png)
 
 ## Install Dependencies
 
